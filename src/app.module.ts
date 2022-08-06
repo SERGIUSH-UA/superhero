@@ -8,6 +8,8 @@ import {Superhero} from "./superhero/superhero.model";
 import {FavoriteSuperheros} from "./superhero/favorite-superheros.model";
 import { AuthModule } from './auth/auth.module';
 import { FilesModule } from './files/files.module';
+import {ServeStaticModule} from "@nestjs/serve-static";
+import * as path from 'path';
 
 @Module({
     controllers: [],
@@ -17,6 +19,9 @@ import { FilesModule } from './files/files.module';
             envFilePath: `.${process.env.NODE_ENV}.env`,
             isGlobal: true
         }),
+        ServeStaticModule.forRoot({
+            rootPath: path.resolve(__dirname, 'static'),
+        }),
         SequelizeModule.forRoot({
             dialect: 'postgres',
             host: process.env.DB_HOST,
@@ -25,8 +30,7 @@ import { FilesModule } from './files/files.module';
             password: process.env.DB_PASSWORD,
             database:  process.env.DB_NAME,
             models: [User, Superhero, FavoriteSuperheros],
-            autoLoadModels: true,
-            synchronize: true
+            autoLoadModels: true
         }),
         UsersModule,
         SuperheroModule,

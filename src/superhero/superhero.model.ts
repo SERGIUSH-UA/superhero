@@ -1,8 +1,8 @@
-import {BelongsTo, BelongsToMany, Column, DataType, ForeignKey, HasOne, Model, Table} from "sequelize-typescript";
+import {BelongsToMany, Column, DataType, ForeignKey, HasOne, Model, Table} from "sequelize-typescript";
 import {ApiProperty} from "@nestjs/swagger";
 import {User} from "../users/user.model";
 import {FavoriteSuperheros} from "./favorite-superheros.model";
-import {UsersController} from "../users/users.controller";
+
 
 interface SuperheroCreationAttrs {
     nickname: string;
@@ -12,6 +12,7 @@ interface SuperheroCreationAttrs {
     catch_phrase: string;
     images: string;
     author_id: string;
+    main_image: string;
 }
 
 @Table({tableName:'superheros'})
@@ -47,6 +48,10 @@ export class Superhero extends Model<Superhero, SuperheroCreationAttrs>{
     @ApiProperty({example: '01.jpg;02.jpg', description: 'Names of images, separated by ";"'})
     @Column({type: DataType.STRING})
     images: string;
+
+    @ApiProperty({example: '01.jpg', description: 'Main image of superhero'})
+    @Column({type: DataType.STRING})
+    main_image: string;
 
     @ApiProperty({example: 11, description: 'User`s who created ID'})
     @ForeignKey(()=> User)
