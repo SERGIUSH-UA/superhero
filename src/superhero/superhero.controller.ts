@@ -5,7 +5,7 @@ import {
     Get,
     Param,
     Post,
-    Put,
+    Put, Query,
     UploadedFiles,
     UseInterceptors
 } from '@nestjs/common';
@@ -16,6 +16,7 @@ import {CreateSuperheroDto} from "./dto/create-superhero.dto";
 import {FilesInterceptor} from "@nestjs/platform-express";
 import {UpdateSuperheroDto} from "./dto/update-superhero.dto";
 import {FavoriteSuperheroDto} from "./dto/favorite-superhero.dto";
+import {User} from "../users/user.model";
 
 @ApiTags('Superheros')
 @Controller('api/superheros')
@@ -43,8 +44,16 @@ export class SuperheroController {
     @ApiOperation({summary: 'Getting all superheroes from catalog'})
     @ApiResponse({status: 200, type: [Superhero]})
     @Get()
-    getAll(){
-        return this.superheroService.getAllSuperheroes();
+    getAll( @Query('_limit') limit: number,
+            @Query('_page') page: number){
+        return this.superheroService.getAllSuperheroes(limit, page);
+    }
+
+    @ApiOperation({summary: 'Remove superhero by ID from favorite'})
+    @ApiResponse({status: 200, type: User})
+    @Put('/favorite')
+    removeFromFavorite(@Body() favoriteDto: FavoriteSuperheroDto) {
+        return this.superheroService.removeFromFavorite(favoriteDto);
     }
 
     @ApiOperation({summary: 'Deleting superhero from catalog by ID'})
@@ -65,17 +74,12 @@ export class SuperheroController {
     }
 
     @ApiOperation({summary: 'Add superhero by ID to favorite'})
-    @ApiResponse({status: 200, type: Superhero})
+    @ApiResponse({status: 200, type: User})
     @Post('/favorite')
     addToFavorite(@Body() favoriteDto: FavoriteSuperheroDto) {
         return this.superheroService.addToFavorite(favoriteDto);
     }
 
-    @ApiOperation({summary: 'Remove superhero by ID from favorite'})
-    @ApiResponse({status: 200, type: Superhero})
-    @Delete('/favorite')
-    removeFromFavorite(@Body() favoriteDto: FavoriteSuperheroDto) {
-        return this.superheroService.removeFromFavorite(favoriteDto);
-    }
+
 
 }

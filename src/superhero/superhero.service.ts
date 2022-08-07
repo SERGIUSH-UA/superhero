@@ -38,8 +38,10 @@ export class SuperheroService {
         return superhero;
     }
 
-    async getAllSuperheroes() {
-        const superheros = await this.heroRepository.findAll({include: {all: true}});
+    async getAllSuperheroes(pageSize: number = 99, page: number = 0) {
+        const offset = page * pageSize;
+        const limit = pageSize;
+        const superheros = await this.heroRepository.findAndCountAll({include: {all: true}, limit, offset});
         return superheros;
     }
 
@@ -113,7 +115,8 @@ export class SuperheroService {
         await hero.$set('followers', followers);
         const updateHero = await this.heroRepository.findByPk(favoriteDto.superhero_id, {attributes:['id',
                 'nickname'], include: [{attributes:['id'], association: 'followers'}]});
-        return updateHero;
+        const updateUser = await this.userService.getUserByEmail(user.email);
+        return updateUser;
     }
 
     async removeFromFavorite(favoriteDto: FavoriteSuperheroDto) {
@@ -128,12 +131,13 @@ export class SuperheroService {
                 HttpStatus.BAD_REQUEST);
         }
         let followers = hero.followers;
-        if(followers.includes(user)){
-            followers = followers.filter(item => item !== user);
-        }
+        // if(followers.includes(user)){
+            followers = await followers.filter(item => item.id !== user.id);
+        // }
         await hero.$set('followers', followers);
         const updateHero = await this.heroRepository.findByPk(favoriteDto.superhero_id, {attributes:['id',
                 'nickname'], include: [{attributes:['id'], association: 'followers'}]});
-        return updateHero;
+        const updateUser = await this.userService.getUserByEmail(user.email);
+        return updateUser;
     }
 }

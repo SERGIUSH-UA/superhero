@@ -27,19 +27,38 @@ export class AuthService {
     }
 
     private async generateToken(user: User){
-        const payload = {email: user.email, id: user.id, name: user.username};
+        const payload = {email: user.email, id: user.id, username: user.username};
         return {
             token: this.jwtService.sign(payload)
         }
     }
 
+    private async validateToken(token: string){
+        try {
+            return this.jwtService.verify(token);
+        }
+        catch (e) {
+            throw new HttpException(e.message, HttpStatus.UNAUTHORIZED);
+        }
+
+    }
+
      private async validateUser(userDto: CreateUserDto) {
         const user = await this.userService.getUserByEmail(userDto.email);
+        if(!user){
+            throw new UnauthorizedException({message: 'Invalid login or password!'});
+        }
         const comparePass = await bcrypt.compare(userDto.password, user.password);
 
         if(user && comparePass){
             return user;
         }
         throw new UnauthorizedException({message: 'Invalid login or password!'});
+    }
+
+    async checkAuth(token: string) {
+        const payload = await this.validateToken(token);
+        const user = await this.userService.getUserByEmail(payload.email);
+        return user;
     }
 }
