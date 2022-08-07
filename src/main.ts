@@ -8,6 +8,8 @@ import {AppModule} from "./app.module";
 async function start() {
     const PORT = process.env.PORT || 5001;
     const app = await NestFactory.create(AppModule);
+    // app.enableCors({credentials: true,
+    // origin: ['http://localohost:3000']});
     app.enableCors();
     const config = new DocumentBuilder().
         setTitle('Test task for JS Ninjas').
