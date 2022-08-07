@@ -10,6 +10,7 @@ Nestjs web application. It`s a server side part
 ```bash
 $ npm install
 ```
+Reconfigure `.development.env` and `.production.env` file for you configuration
 
 ## Running the app
 
