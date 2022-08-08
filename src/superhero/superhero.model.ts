@@ -32,12 +32,12 @@ export class Superhero extends Model<Superhero, SuperheroCreationAttrs>{
 
     @ApiProperty({example: 'He was born Kal-El on the planet Krypton, before being rocketed to\n' +
             'Earth as an infant by his scientist father Jor-El, moments before Krypton\'s destruction…', description: 'Description'})
-    @Column({type: DataType.STRING})
+    @Column({type: DataType.TEXT})
     origin_description: string;
 
     @ApiProperty({example: 'Solar energy absorption and healing factor, solar flare and heat vision,\n' +
             'solar invulnerability, flight…', description: 'Superpowers'})
-    @Column({type: DataType.STRING})
+    @Column({type: DataType.TEXT})
     superpowers: string;
 
     @ApiProperty({example: '“Look, up in the sky, it\'s a bird, it\'s a plane, it\'s Superman!”',
@@ -46,7 +46,7 @@ export class Superhero extends Model<Superhero, SuperheroCreationAttrs>{
     catch_phrase: string;
 
     @ApiProperty({example: '01.jpg;02.jpg', description: 'Names of images, separated by ";"'})
-    @Column({type: DataType.STRING})
+    @Column({type: DataType.TEXT})
     images: string;
 
     @ApiProperty({example: '01.jpg', description: 'Main image of superhero'})
