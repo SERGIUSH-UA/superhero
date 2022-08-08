@@ -5,8 +5,7 @@ import {CreateSuperheroDto} from "./dto/create-superhero.dto";
 import {FilesService} from "../files/files.service";
 import {UsersService} from "../users/users.service";
 import {FavoriteSuperheroDto} from "./dto/favorite-superhero.dto";
-import {FavoriteSuperheros} from "./favorite-superheros.model";
-import {User} from "../users/user.model";
+
 
 @Injectable()
 export class SuperheroService {
@@ -79,8 +78,12 @@ export class SuperheroService {
             throw new HttpException(`Heros with ID ${id} does not exist`, HttpStatus.BAD_REQUEST);
         }
         let fileNames = hero.images;
+        let mainImg = data.main_image || hero.main_image;
         for (const file in images) {
             const fileNameUpload = await this.fileService.createFile(images[file]);
+            if(!mainImg && +file === 0){
+                mainImg = fileNameUpload;
+            }
             fileNames = fileNames + fileNameUpload + ';';
         }
         if(data.remove_images){
@@ -92,8 +95,11 @@ export class SuperheroService {
         if (!hero){
             throw new HttpException(`Hero with ID ${id} does not exist`, HttpStatus.BAD_REQUEST);
         }
+        if(!fileNames && mainImg){
+            mainImg = '';
+        }
         const [numberOfAffectedRows, [updatedHero]] = await this.heroRepository.update({ ...data, images: fileNames,
-        author_id: hero.author_id}, { where: {id}, returning: true });
+        author_id: hero.author_id, main_image: mainImg}, { where: {id}, returning: true });
         return updatedHero;
     }
 
