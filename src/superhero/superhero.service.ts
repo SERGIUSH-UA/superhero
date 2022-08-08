@@ -17,6 +17,9 @@ export class SuperheroService {
 
     async createSuperhero(dto: CreateSuperheroDto, images: [any]){
         const candidate = await this.getHeroByNickname(dto.nickname);
+        if(!dto.nickname || dto.nickname === '') {
+            throw new HttpException('Nickname is required', HttpStatus.BAD_REQUEST);
+        }
         if(candidate) {
             throw new HttpException('Superhero with this nickname is created', HttpStatus.BAD_REQUEST);
         }

@@ -17,6 +17,9 @@ export class AuthService {
     }
 
     async registration(userDto: CreateUserDto){
+        if(!userDto.email  || userDto.email === '') {
+            throw new HttpException('Email is required', HttpStatus.BAD_REQUEST);
+        }
         const candidate = await this.userService.getUserByEmail(userDto.email);
         if(candidate) {
             throw new HttpException('User with this email is registered', HttpStatus.BAD_REQUEST);
