@@ -4,7 +4,7 @@ import { SuperheroModule } from '../src/superhero/superhero.module';
 import { SuperheroService } from '../src/superhero/superhero.service';
 import { INestApplication } from '@nestjs/common';
 
-describe('Superheroes', () => {
+describe('Api', () => {
     let app: INestApplication;
     let superheroService = { getAllSuperheroes: () => ['test'] };
 

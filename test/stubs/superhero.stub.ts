@@ -1,6 +1,4 @@
-import {Superhero} from "../../src/superhero/superhero.model";
-
-export const superheroStub = {
+export const superheroStub = () => ({
     id: 7,
     nickname: "Superman",
     real_name: "Clark Kent",
@@ -13,4 +11,9 @@ export const superheroStub = {
     createdAt: "2022-08-08T17:24:40.974Z",
     updatedAt: "2022-08-08T17:24:40.974Z",
     followers: []
-}
+})
+
+export const getAllStub = () => ({
+    count:1,
+    rows:[superheroStub()]
+})

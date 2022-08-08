@@ -5,6 +5,10 @@ import {UsersService} from "../users/users.service";
 import {Superhero} from "./superhero.model";
 import {FilesService} from "../files/files.service";
 import {User} from "../users/user.model";
+import {getAllStub} from "../../test/stubs/superhero.stub";
+
+jest.mock('./superhero.service');
+jest.mock('../users/users.service');
 
 describe('SuperheroController', () => {
     let superheroController: SuperheroController;
@@ -20,19 +24,17 @@ describe('SuperheroController', () => {
         const moduleRef = await Test.createTestingModule({
             controllers: [SuperheroController],
             providers: [SuperheroService, UsersService],
-        }).overrideProvider(SuperheroService).useValue(superheroServiceMoke)
-            .overrideProvider(User).useValue(userServiceMoke).compile();
+        }).compile();
 
         superheroService = moduleRef.get<SuperheroService>(SuperheroService);
         superheroController = moduleRef.get<SuperheroController>(SuperheroController);
+        jest.clearAllMocks();
     });
     //
     describe('getAll', () => {
         it('should return an array of sups with count', async () => {
-            const result = { rows:[], count:0};
-            jest.spyOn(superheroService, 'getAllSuperheroes').mockImplementation(async () => result);
-
-            expect(await superheroController.getAll(1,0)).toBe(result);
+            const result = getAllStub();
+            expect(await superheroController.getAll(1,0)).toStrictEqual(result);
         });
     });
 
